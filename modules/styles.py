@@ -1,5 +1,6 @@
 from pathlib import Path
 from modules import errors
+from typing import List, Union
 import csv
 import os
 import typing
@@ -8,9 +9,9 @@ import shutil
 
 class PromptStyle(typing.NamedTuple):
     name: str
-    prompt: str | None
-    negative_prompt: str | None
-    path: str | None = None
+    prompt: Union[str, None]
+    negative_prompt: Union[str, None]
+    path: Union[str, None] = None
 
 
 def merge_prompts(style_prompt: str, prompt: str) -> str:
@@ -79,7 +80,7 @@ def extract_original_prompts(style: PromptStyle, prompt, negative_prompt):
 
 
 class StyleDatabase:
-    def __init__(self, paths: list[str | Path]):
+    def __init__(self, paths: List[Union[str, Path]] ):
         self.no_style = PromptStyle("None", "", "", None)
         self.styles = {}
         self.paths = paths
@@ -128,7 +129,7 @@ class StyleDatabase:
             if styles_file.is_file():
                 self.load_from_csv(styles_file)
 
-    def load_from_csv(self, path: str | Path):
+    def load_from_csv(self, path: Union[str, Path]):
         try:
             with open(path, "r", encoding="utf-8-sig", newline="") as file:
                 reader = csv.DictReader(file, skipinitialspace=True)
